@@ -1,51 +1,73 @@
 
+#include <stdlib.h>
 #include <stdio.h>
-#include <stdlib.h> 
+#define NB_PARTICLES 10
+#define NB_STATE 6
+
+struct Particle{
+	double state[NB_STATE];
+
+};
+typedef struct Particle Particle;
 
 
-#define COUCOU() printf("Hello world");
 
 
-typedef struct PF PFa;
-struct PF{
-	int nb_particle;
-	int nb_games;
+void print_Particle(Particle * particle){
+	
+	for(int j=0;j<NB_STATE;j++){
+		printf("%f ", particle->state[j]);
+	}
+	printf("\n");
+};
 
+Particle init_particle(){
+	
+	double state[NB_STATE] = {0};
+	Particle particle = {{state[NB_STATE]}};
+	return particle;
+}
+
+
+struct ParticleFilter{
+	Particle particles[NB_PARTICLES]; 
 };
 
 
-int main(int argc, char *argv[])
-{   
-	
-	printf("nb count : %d\n",argc);
-	int tableau[argc];
-	char *p;
-	printf("tab = %p\n",tableau);
-		int i=1;
+void print_PF(struct ParticleFilter * pf	){
 
+	printf("Nb particle = %d, Nb state = %d, \n", NB_PARTICLES,NB_STATE);
 
-	for (;i<argc;i++){
-		tableau[i] = strtol(argv[i],&p,10);
-		printf("HUm  : %d\n",tableau[i]);
-		//printf("nb count : %s\n",argv[i]);
-	}
-	tableau[7]  =69;
-
-	for (int j=1;j<5+i;j++){
-		printf("PT = %p   , int = %i \n",tableau+j,*(tableau+j));
+	for(int i=0;i<NB_PARTICLES;i++){
+		print_Particle(&(pf->particles[i]));
 	}
 
+}
 
-	COUCOU();
+void init_pf(struct ParticleFilter * pf){
+
+	for(int i=1;i<NB_PARTICLES;i++){
+		pf->particles[i]= init_particle();
+	}
+}
 
 
+int main(void){
 
-	PFa plop = {5,6};
+ 	struct ParticleFilter *pf = malloc(sizeof(struct ParticleFilter ));
 
-	printf("\n%i\n",plop.nb_games	);
+	init_pf(pf);
+    // FILE* random = fopen("/dev/urandom", "rb");
+    // if (!random || fread(&pf, sizeof(pf), 1, random) != 1) {
+    //     fputs("Failed to generate random data", stderr);
+    //     return -1;
+	// }
+    // fclose(random);
 
-	return 0;
-}	
+	print_PF(pf);
 
+	printf("size of pf ? %ld\n",sizeof(*pf));
+    // printf("foo.d = %d\n", pf.nb_particles);
+}
 
 
